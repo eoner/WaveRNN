@@ -15,6 +15,7 @@ hyperparameter. Some cleaners are English-specific. You'll typically want to use
 import re
 from unidecode import unidecode
 from .numbers import normalize_numbers
+from .numbers_tr import normalize_numbers_tr
 
 
 # Regular expression matching whitespace:
@@ -42,16 +43,39 @@ _abbreviations = [(re.compile('\\b%s\\.' % x[0], re.IGNORECASE), x[1]) for x in 
   ('ft', 'fort'),
 ]]
 
+_abbreviations_tr = [(re.compile('\\b%s\\.' % x[0], re.IGNORECASE), x[1]) for x in [
+  ('hz', 'hazreti'),
+  ('km', 'kilometre'),
+  ('dr', 'doktor'),
+  ('ltd', 'limited'),
+]]
+
+
+
 
 def expand_abbreviations(text):
   for regex, replacement in _abbreviations:
     text = re.sub(regex, replacement, text)
   return text
 
+def expand_abbreviations_tr(text):
+  for regex, replacement in _abbreviations_tr:
+    text = re.sub(regex, replacement, text)
+  return text  
+
 
 def expand_numbers(text):
   return normalize_numbers(text)
 
+def expand_numbers_tr(text):
+  return normalize_numbers_tr(text)  
+
+def replace_hats(text):
+  text=text.replace('Â','A')
+  text=text.replace('â','a')
+  text=text.replace('Î','İ')
+  text=text.replace('î','i')
+  return text
 
 def lowercase(text):
   return text.lower()
@@ -88,3 +112,12 @@ def english_cleaners(text):
   text = expand_abbreviations(text)
   text = collapse_whitespace(text)
   return text
+
+def turkish_cleaners(text):
+  '''Pipeline for Turkish text, including number and abbreviation expansion.'''
+  text = replace_hats(text)
+  text = lowercase(text)
+  text = expand_numbers_tr(text)
+  text = expand_abbreviations_tr(text)
+  text = collapse_whitespace(text)
+  return text  
