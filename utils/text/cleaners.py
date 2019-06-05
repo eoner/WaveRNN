@@ -75,6 +75,8 @@ def replace_hats(text):
   text=text.replace('â','a')
   text=text.replace('Î','İ')
   text=text.replace('î','i')
+  text=text.replace('Û','U')
+  text=text.replace('û','u')
   return text
 
 def lowercase(text):
