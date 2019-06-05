@@ -142,7 +142,7 @@ class TTSDataset(Dataset):
 
     def __getitem__(self, index):
         id = self.metadata[index]
-        x = text_to_sequence(self.text_dict[id], hp.tts_cleaner_names)
+        x = text_to_sequence(self.text_dict[id+'.wav'], hp.tts_cleaner_names)
         mel = np.load(f'{self.path}mel/{id}.npy')
         mel_len = mel.shape[-1]
         return x, mel, id, mel_len
