@@ -34,9 +34,12 @@ def get_vocoder_datasets(path, batch_size, train_gta) :
 
     with open(f'{path}dataset.pkl', 'rb') as f :
         dataset = pickle.load(f)
-
-    dataset_ids = [x[0] for x in dataset]
-
+    
+    # skip len > max_mel_len samples
+    dataset_ids = [x[0] for x in dataset if x[1] <= hp.tts_max_mel_len]
+    # original: dataset_ids = [x[0] for x in dataset]
+    # another workaround is to edit hparams.py and set hp.tts_max_mel_len = 200000 and then run train_tacotron.py --force_gta.
+    
     random.seed(1234)
     random.shuffle(dataset_ids)
 
